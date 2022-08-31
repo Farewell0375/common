@@ -2,13 +2,10 @@
  * @Author: FHP
  * @Description: 入口
  * @Date: 2022-08-25 22:51:29
- * @LastEditTime: 2022-08-29 22:37:45
+ * @LastEditTime: 2022-08-31 15:18:41
 -->
 <template>
   <div id="app">
-    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    123
     <router-view></router-view>
   </div>
 </template>
@@ -25,12 +22,14 @@ export default {
 </script>
 
 <style lang="less">
+body,html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  width: 100%;
+  height: 100%;
 }
 </style>
