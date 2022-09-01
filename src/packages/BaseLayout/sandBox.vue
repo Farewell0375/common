@@ -2,18 +2,22 @@
  * @Author: FHP
  * @Description: 沙盒
  * @Date: 2022-08-31 14:55:15
- * @LastEditTime: 2022-08-31 16:23:14
+ * @LastEditTime: 2022-08-31 23:30:58
 -->
 <template>
-  <middleConLayout></middleConLayout>
+<div @click="divClick" style="margin-left: 300px">123</div>
 </template>
 
 <script>
-import middleConLayout from './middleConLayout.vue'
+import { throttle } from './util'
 export default {
   name: 'sandBox',
   components: {
-    middleConLayout
+  },
+  methods: {
+    divClick: throttle(() => {
+      console.log('[ 11 ] >', 11)
+    }, 2000)
   }
 }
 </script>
