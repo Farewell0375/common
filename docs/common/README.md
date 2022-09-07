@@ -9,6 +9,7 @@
 const cmps = {};
 requireComponent.keys().map(fileName => {
   // map创建一个新数组，结果是该数组中的每个元素都是调用一个提供的函数
+  // 测试vpn好使不
   const cmp = requireComponent(fileName).default;
   cmps[cmp.name] = cmp;
 });
