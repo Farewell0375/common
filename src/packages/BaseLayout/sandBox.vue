@@ -2,22 +2,42 @@
  * @Author: FHP
  * @Description: 沙盒
  * @Date: 2022-08-31 14:55:15
- * @LastEditTime: 2022-08-31 23:30:58
+ * @LastEditTime: 2022-09-01 21:23:58
 -->
 <template>
-<div @click="divClick" style="margin-left: 300px">123</div>
+  <div>
+    <lb />
+  </div>
 </template>
 
 <script>
-import { throttle } from './util'
+import lb from './lb'
 export default {
   name: 'sandBox',
   components: {
+    lb
   },
-  methods: {
-    divClick: throttle(() => {
-      console.log('[ 11 ] >', 11)
-    }, 2000)
+  data () {
+    return {
+      list: [
+        {
+          id: '1',
+          name: 'x1'
+        },
+        {
+          id: '2',
+          name: 'x2'
+        },
+        {
+          id: '3',
+          name: 'x3'
+        },
+        {
+          id: '4',
+          name: 'x4'
+        }
+      ]
+    }
   }
 }
 </script>
