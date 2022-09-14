@@ -1,4 +1,4 @@
-# 布局
+## 布局
 开发中常用布局属性只有两种，就是`Flex`和`Grid`，`float`属性在开发中几乎已经被淘汰。
 `Flex`与`Grid`的区别在于`Flex`用于一维的布局，而`Grid`常用于二维的布局(网格布局)。
 ## Flex布局与特殊属性
@@ -89,3 +89,101 @@ Grid中的属性不多，并且不常提及，因此只做展示用法。
 }
 </style>
 ```
+
+## em和rem的区别
+
+em是根据父元素来计算的，rem根据html的font-size来计算的 默认情况下1rem = 16px
+
+## div居中的几种方式
+
+基本结构
+
+```html
+    <div class="box">
+      <div></div>
+    </div>
+```
+
+> 第一种，具有宽高的父元素
+>
+> >```css
+> >.box {
+> >   height: 300px;
+> >   width: 300px;
+> >   background: red;
+> >   position: relative;
+> > }
+> > .box > div {
+> >   position: absolute;
+> >   height: 100px;
+> >   width: 100px;
+> >   background: chartreuse;
+> >   left: 100px;
+> >   top: 100px;
+> > }
+> >```
+> >
+> >
+
+
+
+> 第二种,不确定宽高的父元素
+>
+> >```css
+> > .box {
+> >   height: 300px;
+> >   width: 300px;
+> >   position: relative;
+> > }
+> > .box > div {
+> >   height: 100px;
+> >   width: 100px;
+> >   position: absolute;
+> >   left: 50%;
+> >   top: 50%;
+> >   transform: translate(-50%, -50%); //移动自身的百分之50
+> > }
+> >```
+> >
+> >
+
+
+
+> 第三种,flex布局
+>
+> >```css
+> > .box {
+> >   height: 300px;
+> >   width: 300px;
+> >   background: red;
+> >   display: flex;
+> > }
+> > .box > div {
+> >   height: 100px;
+> >   background: pink;
+> >   width: 100px;
+> >   margin: auto; //上下左右全自适应
+> > }
+> >```
+> >
+> >
+
+
+
+> 第四种，flex居中
+>
+> >```css
+> > .box {
+> >   height: 300px;
+> >   width: 300px;
+> >   background: red;
+> >   display: flex;
+> >   justify-content: center; //子元素水平居中
+> >   align-items: center;//子元素垂直居中
+> > }
+> > .box > div {
+> >   height: 100px;
+> >   background: pink;
+> >   width: 100px;
+> > }
+> >```

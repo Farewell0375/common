@@ -1,74 +1,183 @@
-# 介绍
+# Vue相关
+## 自动引入组件 <Badge text="vue2.x"/>
+```js
+const requireComponent = require.context(
+ "./components",
+ false,
+ /\w+\.(vue|js)$/
+);
+const cmps = {};
+requireComponent.keys().map(fileName => {
+  // map创建一个新数组，结果是该数组中的每个元素都是调用一个提供的函数
+  // 测试vpn好使不
+  const cmp = requireComponent(fileName).default;
+  cmps[cmp.name] = cmp;
+});
 
-VuePress 由两部分组成：第一部分是一个[极简静态网站生成器](https://github.com/vuejs/vuepress/tree/master/packages/%40vuepress/core)，它包含由 Vue 驱动的[主题系统](../theme/README.md)和[插件 API](../plugin/README.md)，另一个部分是为书写技术文档而优化的[默认主题](../theme/default-theme-config.md)，它的诞生初衷是为了支持 Vue 及其子项目的文档需求。
+export default {
+  // 注册
+  components: {
+    ...cmps
+  }
+ ```
+## 全局注册 <Badge text="vue2.x"/>
+## 禁止修改 <Badge text="vue2.x"/>
+## 一个页面中多个router-view如何实现 <Badge text="vu2.x"/>
+```js
+{
+    path: '/xxx'
+    // component变成components
+    components: {
+        key1: () => import('@/packages/BaseLayout/sandBox.vue'),
+        key2: () => import('@/packages/BaseLayout/sandBox.vue')
+    }
+}
+```
 
-每一个由 VuePress 生成的页面都带有预渲染好的 HTML，也因此具有非常好的加载性能和搜索引擎优化（SEO）。同时，一旦页面被加载，Vue 将接管这些静态内容，并将其转换成一个完整的单页应用（SPA），其他的页面则会只在用户浏览到的时候才按需加载。
+使用时
 
-## 它是如何工作的？
+```js
+<router-view name="key1"></router-view>
+<router-view name="key2"></router-view>
+```
+## 作用域插槽 <Badge text="vue2.x"/>
 
-事实上，一个 VuePress 网站是一个由 [Vue](http://vuejs.org/)、[Vue Router](https://github.com/vuejs/vue-router) 和 [webpack](http://webpack.js.org/) 驱动的单页应用。如果你以前使用过 Vue 的话，当你在开发一个自定义主题的时候，你会感受到非常熟悉的开发体验，你甚至可以使用 Vue DevTools 去调试你的自定义主题。
+作用域插槽，就是组件中提供数据可供外界访问的插槽
 
-在构建时，我们会为应用创建一个服务端渲染（SSR）的版本，然后通过虚拟访问每一条路径来渲染对应的HTML。这种做法的灵感来源于 [Nuxt](https://nuxtjs.org/) 的 `nuxt generate` 命令，以及其他的一些项目，比如 [Gatsby](https://www.gatsbyjs.org/)。
+在子组件中
 
-## Features
+```vue
+<template>
+  <div>
+    <ul>
+      <li v-for="item in list" :key="item">
+        <slot name="title" :row="item">xxx</slot>
+      </li>
+    </ul>
+  </div>
+</template>
+```
 
-**内置的 Markdown 拓展**
+在父组件中
 
-* [目录](../guide/markdown.md#目录)
-* [自定义容器](../guide/markdown.md#自定义容器)
-* [代码块中的行高亮](../guide/markdown.md#代码块中的行高亮)
-* [行号](../guide/markdown.md#行号)
-* [导入代码段](../guide/markdown.md#导入代码段)
+```vue
+<template>
+  <div>
+    <CenterLayout :list="list">
+      <template #title="{row}">{{row.name}}</template>
+    </CenterLayout>
+  </div>
+</template>
+```
 
-**在 Markdown 中 使用 Vue**
+上面等同于
 
-* [模板语法](../guide/using-vue.md#模板语法)
-* [使用组件](../guide/using-vue.md#使用组件)
+```vue
+<template slot="title" slot-scope="{row}">{{row.name}}</template>
+```
 
-**Vue驱动的自定义主题系统**
+## 路由守卫 <Badge text="vue2.x"/>
 
-* [网站和页面的元数据](../theme/writing-a-theme.md#网站和页面的元数据)
-* [内容摘抄](../theme/writing-a-theme.md#内容摘抄)
+**全局路由守卫**
 
-**默认主题**
+router.beforeEach
 
-* Responsive layout
-* [首页](../theme/default-theme-config.md#首页)
-* [内置的搜索](../theme/default-theme-config.md#内置搜索)
-* [Algolia 搜索](../theme/default-theme-config.md#algolia-搜索)
-* 可定制的 [navbar](../theme/default-theme-config.md#navbar) and [sidebar](../theme/default-theme-config.md#sidebar)
-* [自动生成的 GitHub 链接和页面编辑链接](../theme/default-theme-config.md#Git-仓库和编辑链接)
-* [PWA: 刷新内容的 Popup](../theme/default-theme-config.md#popup-ui-to-refresh-contents)
-* [最后更新时间](../theme/default-theme-config.md#最后更新时间)
-* [多语言支持](../guide/i18n.md)
+**组件路由守卫**
 
-**博客主题**
+在定义路由时
 
-* [文档](https://vuepress-theme-blog.billyyyyy3320.com/)
-* [在线案例](https://billyyyyy3320.com/)
+```js
+{
+    path: '/xxx',
+    component: 'xxx',
+    beforeEnter (to, from, next) => {
+        // 进入组件前
+    }
+}
+```
 
-**Plugin**
+**写在组件内部的守卫**
 
-* [强大的 Plugin API](../plugin/README.md)
-* [博客插件](https://vuepress-plugin-blog.billyyyyy3320.com/)
-* [PWA 插件](../plugin/official/plugin-pwa.md)
-* [Google Analytics 插件](../plugin/official/plugin-google-analytics.md)
-* ...
+```vue
+methods: {
 
-## 为什么不是...?
+},
+beforeRouterEnter (to, from, next) {
+// 进入组件之前
+}
+beforeRouterUpdate (to, from, next) {
+// 组件更新前
+}
+beforeRouterLeave (to, from, next) {
+// 离开组件前
+}
+```
+## vuex <Badge text="vue2.x"/>
 
-### Nuxt
+**state** 仓库，用于存放东西
 
-VuePress 能做的事情，Nuxt 理论上确实能够胜任，但 Nuxt 是为构建应用程序而生的，而 VuePress 则专注在以内容为中心的静态网站上，同时提供了一些为技术文档定制的开箱即用的特性。
+**getters** 用于过滤之类的
 
-### Docsify / Docute
+**mutation** 同步方法
 
-这两个项目同样都是基于 Vue，然而它们都是完全的运行时驱动，因此对 SEO 不够友好。如果你并不关注 SEO，同时也不想安装大量依赖，它们仍然是非常好的选择！
+**actions** 异步方法
 
-### Hexo
+## keep-alive <Badge text="vue2.x"/>
 
-Hexo 一直驱动着 Vue 的文档 —— 事实上，在把我们的主站从 Hexo 迁移到 VuePress 之前，我们可能还有很长的路要走。Hexo 最大的问题在于他的主题系统太过于静态以及过度地依赖纯字符串，而我们十分希望能够好好地利用 Vue 来处理我们的布局和交互，同时，Hexo 的 Markdown 渲染的配置也不是最灵活的。
+## watch 监听对象会有哪些问题，要怎么解决 <Badge text="vue2.x"/>
 
-### GitBook
+监听对象时，newval会和oldval一样，这是因为对象是引用的
 
-我们的子项目文档一直都在使用 GitBook。GitBook 最大的问题在于当文件很多时，每次编辑后的重新加载时间长得令人无法忍受。它的默认主题导航结构也比较有限制性，并且，主题系统也不是 Vue 驱动的。GitBook 背后的团队如今也更专注于将其打造为一个商业产品而不是开源工具。
+可以用computed来解决，computed中定义一个属性，然后序列化一下，再watch中监听这个computed的属性。
+
+## 微任务与宏任务
+
+微任务与宏任务都属于异步任务
+
+微任务-》宏任务-》微任务-》宏任务 就是事件循环
+
+promise.then() 和 async/await是微任务
+
+settimeout 之类的属于宏任务
+
+## vue为什么使用异步渲染 nextTick <Badge text="vue2.x"/>
+
+vue的异步渲染其实是将dom的更新操作放在微任务中，因为微任务优先于宏任务，所以代码中使用settimeout也可以获取最新的dom数据
+
+而nexttick时注册一个回调函数放在微任务队列，所以要注意nexttick的位置
+
+https://github.com/berwin/Blog/issues/22
+
+## 动态组件
+
+<component :is="xx" />
+
+## 双向绑定的原理 <Badge text="vue2.x"/>
+在vue2中，通过`object.defineProperty`数据劫持以及组合了订阅发布模式来实现的
+
+数据接触，发布订阅模式，组合起来
+## 自定义指令
+
+## 父子，祖孙 通讯方式 兄弟组件除了bus还能用什么通信
+
+```vue
+provider () {
+	return {
+		xxx: 1
+	}
+}
+injdect: ['xxx']
+```
+
+```vue
+Vue.prototype.$bus=new Vue();
+$bus.$on
+$bus.$off
+$bus.$emit
+```
+
+## es6解构赋值怎么设置默认值
+
+const { a = 1, b= 2} = xxx
+
+## 自己封装v-model，以及原理
